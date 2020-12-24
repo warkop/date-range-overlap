@@ -5,14 +5,17 @@ import (
 	"time"
 )
 
+// DateRangeOverlap is constructor
 type DateRangeOverlap struct {
 }
 
+// InputDateOverlap is struct for save start and end date
 type InputDateOverlap struct {
 	StartDate *time.Time
 	EndDate   *time.Time
 }
 
+// NewDateRangeOverlap initial action
 func NewDateRangeOverlap() *DateRangeOverlap {
 	return &DateRangeOverlap{}
 }
@@ -34,14 +37,12 @@ func (d *DateRangeOverlap) Validate(input, checkval InputDateOverlap) error {
 		return fmt.Errorf("Checkval start date cannot be null")
 	}
 
-	if checkval.StartDate == nil {
-		return fmt.Errorf("Checkval start date cannot be null")
+	if checkval.EndDate == nil {
+		return fmt.Errorf("Checkval end date cannot be null")
 	}
 
-	if input.StartDate.After(*checkval.EndDate) ||
-		input.EndDate.After(*checkval.EndDate) ||
-		input.StartDate.Before(*checkval.StartDate) ||
-		input.EndDate.Before(*checkval.StartDate) {
+	// this is a main logic, would check input date is overlap with existing data or not
+	if input.StartDate.Before(*checkval.EndDate) && input.EndDate.After(*checkval.StartDate) {
 		return fmt.Errorf("Time overlap")
 	}
 
