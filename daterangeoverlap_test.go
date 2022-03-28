@@ -118,8 +118,8 @@ func TestFirst(t *testing.T) {
 		},
 		{
 			name:           "Check if check end is null",
-			inputStartTime: "17:00",
-			inputEndTime:   "14:00",
+			inputStartTime: "14:00",
+			inputEndTime:   "17:00",
 			checkStartTime: "08:00",
 			checkEndTime:   "",
 			wantError:      true,
@@ -128,15 +128,15 @@ func TestFirst(t *testing.T) {
 
 	for _, tt := range tableTest {
 		t.Run(tt.name, func(t *testing.T) {
-			startDate, _ := time.Parse(HourMinute, tt.inputStartTime)
-			startEndDate, _ := time.Parse(HourMinute, tt.inputEndTime)
-			checkDate, _ := time.Parse(HourMinute, tt.checkStartTime)
-			checkEndDate, _ := time.Parse(HourMinute, tt.checkStartTime)
+			inputStartDate, _ := time.Parse(HourMinute, tt.inputStartTime)
+			inputEndDate, _ := time.Parse(HourMinute, tt.inputEndTime)
+			checkStartDate, _ := time.Parse(HourMinute, tt.checkStartTime)
+			checkEndDate, _ := time.Parse(HourMinute, tt.checkEndTime)
 			err := NewDateRangeOverlap().Validate(InputDateOverlap{
-				StartDate: &startDate,
-				EndDate:   &startEndDate,
+				StartDate: &inputStartDate,
+				EndDate:   &inputEndDate,
 			}, InputDateOverlap{
-				StartDate: &checkDate,
+				StartDate: &checkStartDate,
 				EndDate:   &checkEndDate,
 			})
 
