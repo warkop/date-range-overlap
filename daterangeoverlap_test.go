@@ -12,193 +12,139 @@ const (
 )
 
 func TestFirst(t *testing.T) {
-	time.Now()
+	tableTest := []struct {
+		name           string
+		inputStartTime string
+		inputEndTime   string
+		checkStartTime string
+		checkEndTime   string
+		wantError      bool
+	}{
+		{
+			name:           "Date must be oke case 1",
+			inputStartTime: "17:00",
+			inputEndTime:   "20:00",
+			checkStartTime: "08:00",
+			checkEndTime:   "17:00",
+			wantError:      false,
+		},
+		{
+			name:           "Date must be oke case 2",
+			inputStartTime: "03:00",
+			inputEndTime:   "07:00",
+			checkStartTime: "08:00",
+			checkEndTime:   "17:00",
+			wantError:      false,
+		},
+		{
+			name:           "Date must be oke case 2",
+			inputStartTime: "06:00",
+			inputEndTime:   "08:00",
+			checkStartTime: "08:00",
+			checkEndTime:   "17:00",
+			wantError:      false,
+		},
+		{
+			name:           "Date must be oke case 3",
+			inputStartTime: "03:00",
+			inputEndTime:   "07:00",
+			checkStartTime: "08:00",
+			checkEndTime:   "17:00",
+			wantError:      false,
+		},
+		{
+			name:           "Date must be oke case 4",
+			inputStartTime: "18:00",
+			inputEndTime:   "22:00",
+			checkStartTime: "08:00",
+			checkEndTime:   "17:00",
+			wantError:      false,
+		},
+		{
+			name:           "Date must be overlap case 1",
+			inputStartTime: "16:59",
+			inputEndTime:   "19:00",
+			checkStartTime: "08:00",
+			checkEndTime:   "17:00",
+			wantError:      true,
+		},
+		{
+			name:           "Date must be overlap case 2",
+			inputStartTime: "06:00",
+			inputEndTime:   "08:01",
+			checkStartTime: "08:00",
+			checkEndTime:   "17:00",
+			wantError:      true,
+		},
+		{
+			name:           "Date must be overlap case 3",
+			inputStartTime: "07:50",
+			inputEndTime:   "18:55",
+			checkStartTime: "08:00",
+			checkEndTime:   "17:00",
+			wantError:      true,
+		},
+		{
+			name:           "Date must be overlap case 4",
+			inputStartTime: "09:00",
+			inputEndTime:   "14:00",
+			checkStartTime: "08:00",
+			checkEndTime:   "17:00",
+			wantError:      true,
+		},
+		{
+			name:           "Check if input start is null",
+			inputStartTime: "",
+			inputEndTime:   "14:00",
+			checkStartTime: "08:00",
+			checkEndTime:   "17:00",
+			wantError:      true,
+		},
+		{
+			name:           "Check if input end is null",
+			inputStartTime: "17:00",
+			inputEndTime:   "",
+			checkStartTime: "08:00",
+			checkEndTime:   "17:00",
+			wantError:      true,
+		},
+		{
+			name:           "Check if check start is null",
+			inputStartTime: "17:00",
+			inputEndTime:   "14:00",
+			checkStartTime: "",
+			checkEndTime:   "17:00",
+			wantError:      true,
+		},
+		{
+			name:           "Check if check end is null",
+			inputStartTime: "17:00",
+			inputEndTime:   "14:00",
+			checkStartTime: "08:00",
+			checkEndTime:   "",
+			wantError:      true,
+		},
+	}
 
-	t.Run("Date must be oke case 1", func(t *testing.T) {
-		startDate, _ := time.Parse(HourMinute, "17:00")
-		startEndDate, _ := time.Parse(HourMinute, "20:00")
-		checkDate, _ := time.Parse(HourMinute, "08:00")
-		checkEndDate, _ := time.Parse(HourMinute, "17:00")
-		err := NewDateRangeOverlap().Validate(InputDateOverlap{
-			StartDate: &startDate,
-			EndDate:   &startEndDate,
-		}, InputDateOverlap{
-			StartDate: &checkDate,
-			EndDate:   &checkEndDate,
+	for _, tt := range tableTest {
+		t.Run(tt.name, func(t *testing.T) {
+			startDate, _ := time.Parse(HourMinute, tt.inputStartTime)
+			startEndDate, _ := time.Parse(HourMinute, tt.inputEndTime)
+			checkDate, _ := time.Parse(HourMinute, tt.checkStartTime)
+			checkEndDate, _ := time.Parse(HourMinute, tt.checkStartTime)
+			err := NewDateRangeOverlap().Validate(InputDateOverlap{
+				StartDate: &startDate,
+				EndDate:   &startEndDate,
+			}, InputDateOverlap{
+				StartDate: &checkDate,
+				EndDate:   &checkEndDate,
+			})
+
+			if tt.wantError {
+				assert.Error(t, err)
+			} else {
+				assert.NoError(t, err)
+			}
 		})
-
-		assert.NoError(t, err)
-	})
-
-	t.Run("Date must be oke case 2", func(t *testing.T) {
-		startDate, _ := time.Parse(HourMinute, "06:00")
-		startEndDate, _ := time.Parse(HourMinute, "08:00")
-		checkDate, _ := time.Parse(HourMinute, "08:00")
-		checkEndDate, _ := time.Parse(HourMinute, "17:00")
-		err := NewDateRangeOverlap().Validate(InputDateOverlap{
-			StartDate: &startDate,
-			EndDate:   &startEndDate,
-		}, InputDateOverlap{
-			StartDate: &checkDate,
-			EndDate:   &checkEndDate,
-		})
-
-		assert.NoError(t, err)
-	})
-
-	t.Run("Date must be oke case 3", func(t *testing.T) {
-		startDate, _ := time.Parse(HourMinute, "03:00")
-		startEndDate, _ := time.Parse(HourMinute, "07:00")
-		checkDate, _ := time.Parse(HourMinute, "08:00")
-		checkEndDate, _ := time.Parse(HourMinute, "17:00")
-		err := NewDateRangeOverlap().Validate(InputDateOverlap{
-			StartDate: &startDate,
-			EndDate:   &startEndDate,
-		}, InputDateOverlap{
-			StartDate: &checkDate,
-			EndDate:   &checkEndDate,
-		})
-
-		assert.NoError(t, err)
-	})
-
-	t.Run("Date must be oke case 4", func(t *testing.T) {
-		startDate, _ := time.Parse(HourMinute, "18:00")
-		startEndDate, _ := time.Parse(HourMinute, "22:00")
-		checkDate, _ := time.Parse(HourMinute, "08:00")
-		checkEndDate, _ := time.Parse(HourMinute, "17:00")
-		err := NewDateRangeOverlap().Validate(InputDateOverlap{
-			StartDate: &startDate,
-			EndDate:   &startEndDate,
-		}, InputDateOverlap{
-			StartDate: &checkDate,
-			EndDate:   &checkEndDate,
-		})
-
-		assert.NoError(t, err)
-	})
-
-	t.Run("Date must be overlap case 1", func(t *testing.T) {
-		startDate, _ := time.Parse(HourMinute, "16:59")
-		startEndDate, _ := time.Parse(HourMinute, "19:00")
-		checkDate, _ := time.Parse(HourMinute, "08:00")
-		checkEndDate, _ := time.Parse(HourMinute, "17:00")
-		err := NewDateRangeOverlap().Validate(InputDateOverlap{
-			StartDate: &startDate,
-			EndDate:   &startEndDate,
-		}, InputDateOverlap{
-			StartDate: &checkDate,
-			EndDate:   &checkEndDate,
-		})
-
-		assert.NoError(t, err)
-	})
-
-	t.Run("Date must be overlap case 2", func(t *testing.T) {
-		startDate, _ := time.Parse(HourMinute, "06:00")
-		startEndDate, _ := time.Parse(HourMinute, "08:01")
-		checkDate, _ := time.Parse(HourMinute, "08:00")
-		checkEndDate, _ := time.Parse(HourMinute, "17:00")
-		err := NewDateRangeOverlap().Validate(InputDateOverlap{
-			StartDate: &startDate,
-			EndDate:   &startEndDate,
-		}, InputDateOverlap{
-			StartDate: &checkDate,
-			EndDate:   &checkEndDate,
-		})
-
-		assert.NoError(t, err)
-	})
-
-	t.Run("Date must be overlap case 3", func(t *testing.T) {
-		startDate, _ := time.Parse(HourMinute, "07:50")
-		startEndDate, _ := time.Parse(HourMinute, "18:55")
-		checkDate, _ := time.Parse(HourMinute, "08:00")
-		checkEndDate, _ := time.Parse(HourMinute, "17:00")
-		err := NewDateRangeOverlap().Validate(InputDateOverlap{
-			StartDate: &startDate,
-			EndDate:   &startEndDate,
-		}, InputDateOverlap{
-			StartDate: &checkDate,
-			EndDate:   &checkEndDate,
-		})
-
-		assert.NoError(t, err)
-	})
-
-	t.Run("Date must be overlap case 4", func(t *testing.T) {
-		startDate, _ := time.Parse(HourMinute, "09:00")
-		startEndDate, _ := time.Parse(HourMinute, "14:00")
-		checkDate, _ := time.Parse(HourMinute, "08:00")
-		checkEndDate, _ := time.Parse(HourMinute, "17:00")
-		err := NewDateRangeOverlap().Validate(InputDateOverlap{
-			StartDate: &startDate,
-			EndDate:   &startEndDate,
-		}, InputDateOverlap{
-			StartDate: &checkDate,
-			EndDate:   &checkEndDate,
-		})
-
-		assert.NoError(t, err)
-	})
-
-	t.Run("Check if input start is null", func(t *testing.T) {
-		startEndDate, _ := time.Parse(HourMinute, "14:00")
-		checkDate, _ := time.Parse(HourMinute, "08:00")
-		checkEndDate, _ := time.Parse(HourMinute, "17:00")
-		err := NewDateRangeOverlap().Validate(InputDateOverlap{
-			StartDate: nil,
-			EndDate:   &startEndDate,
-		}, InputDateOverlap{
-			StartDate: &checkDate,
-			EndDate:   &checkEndDate,
-		})
-
-		assert.NoError(t, err)
-	})
-
-	t.Run("Check if input end is null", func(t *testing.T) {
-		startDate, _ := time.Parse(HourMinute, "17:00")
-		checkDate, _ := time.Parse(HourMinute, "08:00")
-		checkEndDate, _ := time.Parse(HourMinute, "17:00")
-		err := NewDateRangeOverlap().Validate(InputDateOverlap{
-			StartDate: &startDate,
-			EndDate:   nil,
-		}, InputDateOverlap{
-			StartDate: &checkDate,
-			EndDate:   &checkEndDate,
-		})
-
-		assert.NoError(t, err)
-	})
-
-	t.Run("Check if check start is null", func(t *testing.T) {
-		startDate, _ := time.Parse(HourMinute, "17:00")
-		startEndDate, _ := time.Parse(HourMinute, "14:00")
-		checkEndDate, _ := time.Parse(HourMinute, "17:00")
-		err := NewDateRangeOverlap().Validate(InputDateOverlap{
-			StartDate: &startDate,
-			EndDate:   &startEndDate,
-		}, InputDateOverlap{
-			StartDate: nil,
-			EndDate:   &checkEndDate,
-		})
-
-		assert.NoError(t, err)
-	})
-
-	t.Run("Check if check end is null", func(t *testing.T) {
-		startDate, _ := time.Parse(HourMinute, "17:00")
-		startEndDate, _ := time.Parse(HourMinute, "14:00")
-		checkDate, _ := time.Parse(HourMinute, "08:00")
-		err := NewDateRangeOverlap().Validate(InputDateOverlap{
-			StartDate: &startDate,
-			EndDate:   &startEndDate,
-		}, InputDateOverlap{
-			StartDate: &checkDate,
-			EndDate:   nil,
-		})
-
-		assert.NoError(t, err)
-	})
+	}
 }
