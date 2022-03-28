@@ -133,11 +133,11 @@ func TestFirst(t *testing.T) {
 			checkStartDate, _ := time.Parse(HourMinute, tt.checkStartTime)
 			checkEndDate, _ := time.Parse(HourMinute, tt.checkEndTime)
 			err := NewDateRangeOverlap().Validate(InputDateOverlap{
-				StartDate: &inputStartDate,
-				EndDate:   &inputEndDate,
+				StartDate: inputStartDate,
+				EndDate:   inputEndDate,
 			}, InputDateOverlap{
-				StartDate: &checkStartDate,
-				EndDate:   &checkEndDate,
+				StartDate: checkStartDate,
+				EndDate:   checkEndDate,
 			})
 
 			if tt.wantError {
