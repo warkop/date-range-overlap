@@ -92,38 +92,6 @@ func TestFirst(t *testing.T) {
 			checkEndTime:   "17:00",
 			wantError:      true,
 		},
-		{
-			name:           "Check if input start is null",
-			inputStartTime: "",
-			inputEndTime:   "14:00",
-			checkStartTime: "08:00",
-			checkEndTime:   "17:00",
-			wantError:      true,
-		},
-		{
-			name:           "Check if input end is null",
-			inputStartTime: "17:00",
-			inputEndTime:   "",
-			checkStartTime: "08:00",
-			checkEndTime:   "17:00",
-			wantError:      true,
-		},
-		{
-			name:           "Check if check start is null",
-			inputStartTime: "17:00",
-			inputEndTime:   "14:00",
-			checkStartTime: "",
-			checkEndTime:   "17:00",
-			wantError:      true,
-		},
-		{
-			name:           "Check if check end is null",
-			inputStartTime: "14:00",
-			inputEndTime:   "17:00",
-			checkStartTime: "08:00",
-			checkEndTime:   "",
-			wantError:      true,
-		},
 	}
 
 	for _, tt := range tableTest {
